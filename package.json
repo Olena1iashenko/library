@@ -2,6 +2,7 @@
   "name": "library",
   "private": true,
   "version": "0.0.0",
+  "homepage": "https://olena1iashenko.github.io/library/",
   "type": "module",
   "scripts": {
     "dev": "vite",
