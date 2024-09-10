@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { RiLoaderLine } from "react-icons/ri";
 import { useSearchParams } from "react-router-dom";
+import { searchBookThunk } from "../../redux/operations";
 
 const SearchForm = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -25,7 +26,7 @@ const SearchForm = () => {
       setIsLoading(true);
       setError("");
       try {
-        const data = await getBooks(searchQuery);
+        const data = await dispatch(searchBookThunk(searchQuery)).unwrap();
         if (!data.length) {
           throw new Error("Please enter another search");
         }
