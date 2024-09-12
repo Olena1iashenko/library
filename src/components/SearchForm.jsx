@@ -1,14 +1,19 @@
 import { useEffect, useState } from "react";
 import { RiLoaderLine } from "react-icons/ri";
-import { useSearchParams } from "react-router-dom";
+// import { useSearchParams } from "react-router-dom";
 import { searchBookThunk } from "../../redux/operations";
+import { useDispatch } from "react-redux";
 
-const SearchForm = () => {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const [data, setData] = useState([]);
+const SearchForm = ({
+  data,
+  setData,
+  searchParams,
+  setSearchParams,
+  searchQuery,
+}) => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
-  const searchQuery = searchParams.get("query") ?? "";
+  const dispatch = useDispatch();
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -26,11 +31,11 @@ const SearchForm = () => {
       setIsLoading(true);
       setError("");
       try {
-        const data = await dispatch(searchBookThunk(searchQuery)).unwrap();
-        if (!data.length) {
+        const result = await dispatch(searchBookThunk(searchQuery)).unwrap();
+        if (!result.length) {
           throw new Error("Please enter another search");
         }
-        setData(data);
+        setData(result);
       } catch (error) {
         setError(error.message);
       } finally {
@@ -38,27 +43,29 @@ const SearchForm = () => {
       }
     };
     getData();
-  }, [searchQuery]);
+  }, [searchQuery, dispatch, setData]);
   return (
-    <form onSubmit={handleSubmit}>
-      <input
-        placeholder="Enter your search..."
-        type="text"
-        defaultValue={searchQuery}
-        name="query"
-      />
-      <button type="submit" disabled={isLoading}>
-        {isLoading ? (
-          <>
-            <RiLoaderLine />
-            &nbsp;Loading...
-          </>
-        ) : (
-          "Search"
-        )}
-      </button>
-      {error && <p style={{ color: "red" }}>Error: {error}</p>}
-    </form>
+    <div style={{ display: "flex", flexDirection: "column" }}>
+      <form onSubmit={handleSubmit}>
+        <input
+          placeholder="Enter your search..."
+          type="text"
+          defaultValue={searchQuery}
+          name="query"
+        />
+        <button type="submit" disabled={isLoading}>
+          {isLoading ? (
+            <>
+              <RiLoaderLine />
+              &nbsp;Loading...
+            </>
+          ) : (
+            "Search"
+          )}
+        </button>
+        {error && <p style={{ color: "red" }}>Error: {error}</p>}
+      </form>
+    </div>
   );
 };
 

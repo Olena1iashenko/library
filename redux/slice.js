@@ -28,13 +28,16 @@ const booksSlice = createSlice({
         state.items = payload;
       })
       .addCase(addBookThunk.fulfilled, (state, { payload }) => {
+        const { items } = state;
         state.items = [...items, payload];
       })
       .addCase(editBookThunk.fulfilled, (state, { payload }) => {
-        state.items = payload;
+        state.items = state.items.map((item) =>
+          item.ibsn === payload.ibsn ? payload : item
+        );
       })
       .addCase(deleteBookThunk.fulfilled, (state, { payload }) => {
-        state.items = state.items.filter((book) => book.ibsn !== payload);
+        state.items = state.items.filter((item) => item.isbn !== payload);
       })
       .addCase(markBookThunk.fulfilled, (state, { payload }) => {
         state.marked = payload;

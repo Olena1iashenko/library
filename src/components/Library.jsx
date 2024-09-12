@@ -1,10 +1,15 @@
 import { useDispatch } from "react-redux";
-import { deleteBookThunk, editBookThunk } from "../../redux/operations";
+import {
+  deleteBookThunk,
+  editBookThunk,
+  fetchAllBooksThunk,
+} from "../../redux/operations";
 import Modal from "./Modal";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-const Library = ({ books }) => {
+const Library = ({ books, setBooks }) => {
   const dispatch = useDispatch();
+  // const [books, setBooks] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentBook, setCurrentBook] = useState(null);
 
@@ -34,14 +39,28 @@ const Library = ({ books }) => {
       [name]: type === "checkbox" ? checked : value,
     }));
   };
+  useEffect(() => {
+    const fetchBooks = async () => {
+      const data = await dispatch(fetchAllBooksThunk());
+
+      setBooks(data.payload.books);
+    };
+    fetchBooks();
+  }, [dispatch]);
 
   return (
     <>
-      <ul>
+      <ul
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(5, 1fr)",
+          gap: "20px",
+        }}
+      >
         {books?.map((book) => {
           return (
             <li key={book.isbn}>
-              <h3>Titlee: {book.title}</h3>
+              <h3>Title: {book.title}</h3>
               <h3>Author: {book.author}</h3>
               <p>ISBN: {book.isbn}</p>
               <button type="button" onClick={() => handleEdit(book)}>
@@ -58,10 +77,11 @@ const Library = ({ books }) => {
       <Modal
         isOpen={isModalOpen}
         onClose={handleCloseModal}
-        currentBook={currentBook}
         handleSave={handleSave}
         handleChange={handleChange}
         title={"Edit Book"}
+        value={currentBook}
+        checked={currentBook}
       />
     </>
   );

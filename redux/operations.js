@@ -22,6 +22,7 @@ export const addBookThunk = createAsyncThunk(
   async (book, thunkAPI) => {
     try {
       const { data } = await booksAPI.post("/books", book);
+      console.log("AddThunk", data);
       return data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.message);
@@ -33,7 +34,7 @@ export const editBookThunk = createAsyncThunk(
   "books/editBook",
   async (book, thunkAPI) => {
     try {
-      const { data } = await booksAPI.put(`/books/${book.ibsn}`, book);
+      const { data } = await booksAPI.put(`/books/${book.isbn}`, book);
       return data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.message);
@@ -46,6 +47,7 @@ export const deleteBookThunk = createAsyncThunk(
   async (book, thunkAPI) => {
     try {
       await booksAPI.delete(`/books/${book.isbn}`);
+      console.log("delete thunk", book);
       return book;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.message);
@@ -70,7 +72,8 @@ export const searchBookThunk = createAsyncThunk(
   async (query, thunkAPI) => {
     try {
       const { data } = await booksAPI.get(`/books/search?query=${query}`);
-      return data;
+      console.log("searchThunk", data);
+      return data.result;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.message);
     }
