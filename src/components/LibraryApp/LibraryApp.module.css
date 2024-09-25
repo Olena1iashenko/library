@@ -3,7 +3,7 @@
     grid-template-columns: 300px 1fr;
 }
 
-.sidebar {
+.Sidebar {
     display: flex;
     flex-direction: column;
     gap: 20px;

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import Library from "../Library";
-import Sidebar from "../SIdebar";
+import Sidebar from "../Sidebar";
 import s from './LibraryApp.module.css';
 import Favorites from "../Favorites";
 
