@@ -1,19 +1,18 @@
 import { useEffect, useState } from "react";
 import { RiLoaderLine } from "react-icons/ri";
-// import { useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import { searchBookThunk } from "../../redux/operations";
 import { useDispatch } from "react-redux";
 
 const SearchForm = ({
-  data,
   setData,
-  searchParams,
-  setSearchParams,
-  searchQuery,
 }) => {
+  const [searchParams, setSearchParams] = useSearchParams();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const dispatch = useDispatch();
+
+  const searchQuery = searchParams.get("query") ?? "";
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -53,7 +52,7 @@ const SearchForm = ({
           defaultValue={searchQuery}
           name="query"
         />
-        <button type="submit" disabled={isLoading}>
+        <button type="submit" disabled={isLoading} style={{marginLeft: "10px"}}>
           {isLoading ? (
             <>
               <RiLoaderLine />
