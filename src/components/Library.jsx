@@ -1,4 +1,4 @@
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   deleteBookThunk,
   editBookThunk,
@@ -7,9 +7,16 @@ import {
 import Modal from "./Modal";
 import { useEffect, useState } from "react";
 import Book from "./Book";
+import { selectItems } from "../../redux/slice";
 
-const Library = ({ books, setBooks, handleAddToFavorites }) => {
+const Library = ({ toggleFavorites, favorites }) => {
+  const items = useSelector(selectItems);
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(fetchAllBooksThunk());
+  }, [dispatch]);
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentBook, setCurrentBook] = useState(null);
 
@@ -39,14 +46,6 @@ const Library = ({ books, setBooks, handleAddToFavorites }) => {
       [name]: type === "checkbox" ? checked : value,
     }));
   };
-  useEffect(() => {
-    const fetchBooks = async () => {
-      const data = await dispatch(fetchAllBooksThunk());
-
-      setBooks(data.payload.books);
-    };
-    fetchBooks();
-  }, [dispatch]);
 
   return (
     <>
@@ -55,12 +54,17 @@ const Library = ({ books, setBooks, handleAddToFavorites }) => {
           display: "grid",
           gridTemplateColumns: "repeat(5, 1fr)",
           gap: "20px",
-          padding: '10px'
+          padding: "10px",
         }}
       >
-        {books?.map((book) => {
+        {items.books?.map((book) => {
           return (
-            <Book key={book.isbn} book={book} handleAddToFavorites={handleAddToFavorites}/>
+            <Book
+              key={book.isbn}
+              book={book}
+              favorites={favorites}
+              toggleFavorites={toggleFavorites}
+            />
           );
         })}
       </ul>

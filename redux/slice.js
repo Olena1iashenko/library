@@ -14,12 +14,17 @@ const initialState = {
   loading: false,
   error: null,
   marked: [],
+  favorites: [],
 };
 
 const booksSlice = createSlice({
   name: "books",
   initialState,
-
+  selectors: {
+    selectItems: (state) => state.items,
+    selectMarked: (state) => state.marked,
+    selectFavorites: (state) => state.favorites,
+  },
   //   reducers: {
   //   },
   extraReducers: (builder) => {
@@ -97,4 +102,8 @@ const booksSlice = createSlice({
 });
 
 export const booksReducer = booksSlice.reducer;
-// export const { addCurrentTransaction } = transactionsSlice.actions;
+export const { selectItems, selectFavorites, selectMarked } =
+  booksSlice.selectors;
+// export const selectItems = (state) => state.books.items;
+// export const selectFavorites = (state) => state.books.favorites;
+// export const selectMarked = (state) => state.books.marked;

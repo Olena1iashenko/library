@@ -1,23 +1,30 @@
 import { useState } from "react";
 import Library from "../Library";
 import Sidebar from "../Sidebar";
-import s from './LibraryApp.module.css';
+import s from "./LibraryApp.module.css";
 import Favorites from "../Favorites";
+import { useSelector } from "react-redux";
+import { selectFavorites } from "../../../redux/slice";
 
 function LibraryApp() {
+  const favorites = useSelector(selectFavorites);
 
-  const [data, setData] = useState([]);
-  const [favorites, setToFavorites] = useState([])
-  const [selectedTab, setSelectedTab] = useState('home');
+  const [selectedTab, setSelectedTab] = useState("home");
 
-  const handleAddToFavorites =(book)=>{
-    setToFavorites(prev=>[...prev, book])
-  }
+  const toggleFavorites = (bookId) => {
+    if (favorites.includes(bookId)) {
+      favorites.filter((id) => id !== bookId);
+    } else {
+      [...favorites, bookId];
+    }
+  };
   return (
-    < div style={{display: 'flex'}}>
-        <Sidebar className={s.wrapperMain} setSelectedTab={setSelectedTab}/>
-        {selectedTab === 'home' && <Library books={data} setBooks={setData} handleAddToFavorites={handleAddToFavorites}/>}
-        {selectedTab === 'fav' && <Favorites books={favorites}/>}
+    <div style={{ display: "flex" }}>
+      <Sidebar className={s.wrapperMain} setSelectedTab={setSelectedTab} />
+      {selectedTab === "home" && (
+        <Library favorites={favorites} toggleFavorites={toggleFavorites} />
+      )}
+      {selectedTab === "fav" && <Favorites items={favorites} />}
     </div>
   );
 }

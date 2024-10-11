@@ -2,15 +2,18 @@ import { useEffect, useState } from "react";
 import { RiLoaderLine } from "react-icons/ri";
 import { useSearchParams } from "react-router-dom";
 import { searchBookThunk } from "../../redux/operations";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { selectItems } from "../../redux/slice";
 
-const SearchForm = ({
-  setData,
-}) => {
+const SearchForm = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [data, setData] = useState([]);
   const dispatch = useDispatch();
+
+  // Access the books from the Redux store
+  const items = useSelector(selectItems);
 
   const searchQuery = searchParams.get("query") ?? "";
 
@@ -42,7 +45,8 @@ const SearchForm = ({
       }
     };
     getData();
-  }, [searchQuery, dispatch, setData]);
+  }, [searchQuery, dispatch]);
+
   return (
     <div style={{ display: "flex", flexDirection: "column" }}>
       <form onSubmit={handleSubmit}>
@@ -52,7 +56,11 @@ const SearchForm = ({
           defaultValue={searchQuery}
           name="query"
         />
-        <button type="submit" disabled={isLoading} style={{marginLeft: "10px"}}>
+        <button
+          type="submit"
+          disabled={isLoading}
+          style={{ marginLeft: "10px" }}
+        >
           {isLoading ? (
             <>
               <RiLoaderLine />
@@ -64,6 +72,14 @@ const SearchForm = ({
         </button>
         {error && <p style={{ color: "red" }}>Error: {error}</p>}
       </form>
+      {/* Render the books or the search result */}
+      {items.length > 0 && (
+        <ul>
+          {items.map((book) => (
+            <li key={book.isbn}>{book.title}</li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 };
