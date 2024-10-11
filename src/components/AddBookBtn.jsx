@@ -45,7 +45,11 @@ const AddBookBtn = () => {
   return (
     <>
       <div>
-        <button type="button" onClick={handleAddNewBook}>
+        <button
+          type="button"
+          onClick={handleAddNewBook}
+          style={{ width: "100%", background: "#9adb9a" }}
+        >
           Add New Book
         </button>
       </div>

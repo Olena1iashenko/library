@@ -8,7 +8,7 @@ const Sidebar = ({ setSelectedTab }) => {
       style={{
         display: "grid",
         minWidth: "250px",
-        height: "100vh",
+        minHeight: "100vh",
         gap: "10px",
         padding: "10px",
         background: "rgba(160, 193, 193, 0.5)",

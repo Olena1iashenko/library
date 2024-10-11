@@ -1,22 +1,11 @@
-import { useDispatch, useSelector } from "react-redux";
-import {
-  deleteBookThunk,
-  editBookThunk,
-  fetchAllBooksThunk,
-} from "../../redux/operations";
+import { deleteBookThunk, editBookThunk } from "../../redux/operations";
 import Modal from "./Modal";
 import { useEffect, useState } from "react";
 import Book from "./Book";
-import { selectItems } from "../../redux/slice";
+import { useDispatch } from "react-redux";
 
-const Library = ({ toggleFavorites, favorites }) => {
-  const items = useSelector(selectItems);
+const Library = ({ items }) => {
   const dispatch = useDispatch();
-
-  useEffect(() => {
-    dispatch(fetchAllBooksThunk());
-  }, [dispatch]);
-
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentBook, setCurrentBook] = useState(null);
 
@@ -52,18 +41,19 @@ const Library = ({ toggleFavorites, favorites }) => {
       <ul
         style={{
           display: "grid",
-          gridTemplateColumns: "repeat(5, 1fr)",
+          gridTemplateColumns: "repeat(4, 1fr)",
           gap: "20px",
-          padding: "10px",
+          padding: "20px",
+          maxWidth: "100%",
         }}
       >
-        {items.books?.map((book) => {
+        {items.map((book) => {
           return (
             <Book
               key={book.isbn}
               book={book}
-              favorites={favorites}
-              toggleFavorites={toggleFavorites}
+              handleEdit={handleEdit}
+              handleDelete={handleDelete}
             />
           );
         })}

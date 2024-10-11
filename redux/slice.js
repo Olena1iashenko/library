@@ -25,8 +25,18 @@ const booksSlice = createSlice({
     selectMarked: (state) => state.marked,
     selectFavorites: (state) => state.favorites,
   },
-  //   reducers: {
-  //   },
+  reducers: {
+    addToFavorites(state, { payload }) {
+      const existingBook = state.favorites?.find(
+        (book) => book.isbn === payload.isbn
+      );
+      if (!existingBook) {
+        state.favorites.push(payload);
+      } else {
+        state.favorites.splice(state.favorites.indexOf(existingBook), 1);
+      }
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchAllBooksThunk.fulfilled, (state, { payload }) => {
@@ -38,11 +48,11 @@ const booksSlice = createSlice({
       })
       .addCase(editBookThunk.fulfilled, (state, { payload }) => {
         state.items = state.items.map((item) =>
-          item.ibsn === payload.ibsn ? payload : item
+          item.isbn === payload.isbn ? payload : item
         );
       })
       .addCase(deleteBookThunk.fulfilled, (state, { payload }) => {
-        state.items = state.items.filter((item) => item.isbn !== payload);
+        state.items = state.items.filter((item) => item.isbn !== payload.isbn);
       })
       .addCase(markBookThunk.fulfilled, (state, { payload }) => {
         state.marked = payload;
@@ -102,8 +112,11 @@ const booksSlice = createSlice({
 });
 
 export const booksReducer = booksSlice.reducer;
+
 export const { selectItems, selectFavorites, selectMarked } =
   booksSlice.selectors;
 // export const selectItems = (state) => state.books.items;
 // export const selectFavorites = (state) => state.books.favorites;
 // export const selectMarked = (state) => state.books.marked;
+
+export const { addToFavorites } = booksSlice.actions;
