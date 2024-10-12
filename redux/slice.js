@@ -24,6 +24,8 @@ const booksSlice = createSlice({
     selectItems: (state) => state.items,
     selectMarked: (state) => state.marked,
     selectFavorites: (state) => state.favorites,
+    selectLoading: (state) => state.loading,
+    selectError: (state) => state.error,
   },
   reducers: {
     addToFavorites(state, { payload }) {
@@ -58,7 +60,7 @@ const booksSlice = createSlice({
         state.marked = payload;
       })
       .addCase(searchBookThunk.fulfilled, (state, { payload }) => {
-        state.marked = payload;
+        state.items = payload;
       })
       .addCase(filterByBorrowedThunk.fulfilled, (state, { payload }) => {
         state.marked = payload;
@@ -113,8 +115,13 @@ const booksSlice = createSlice({
 
 export const booksReducer = booksSlice.reducer;
 
-export const { selectItems, selectFavorites, selectMarked } =
-  booksSlice.selectors;
+export const {
+  selectItems,
+  selectFavorites,
+  selectMarked,
+  selectError,
+  selectLoading,
+} = booksSlice.selectors;
 // export const selectItems = (state) => state.books.items;
 // export const selectFavorites = (state) => state.books.favorites;
 // export const selectMarked = (state) => state.books.marked;

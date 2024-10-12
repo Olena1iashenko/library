@@ -23,7 +23,7 @@ const Sidebar = ({ setSelectedTab }) => {
       <button type="button" onClick={() => setSelectedTab("fav")}>
         FAVORITES
       </button>
-      {/* <SearchForm /> */}
+      <SearchForm />
       <AddBookBtn />
     </div>
   );
